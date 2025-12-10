@@ -1,8 +1,8 @@
 # AI-TOOL-FOR-READ-AND-ANALYZE-THE-LEGAL-CONTRACTS-AUTOMATICALLY
 # MODULUS REQURIED TO IMPORT 
 # 1.pip install langchain
-a.from langchain_community.document_loaders import PyPDFLoader,TextLoader,UnstructuredWordDocumentLoader:  To Load different types of documents of different structure
-b.from langchain_text_splitters import RecursiveCharacterTextSplitter:To split the data ,semantic chunks
+1.from langchain_community.document_loaders import PyPDFLoader,TextLoader,UnstructuredWordDocumentLoader:  To Load different types of documents of different structure
+2.from langchain_text_splitters import RecursiveCharacterTextSplitter:To split the data ,semantic chunks
 # 2.pip install Sentence Transformers
 a.from sentence_transformers import SentenceTransformer: To convert the text to embeddings(to numbers)
 # 3.pip install huggingface-hub
