@@ -5,8 +5,10 @@ langchain-huggingface
 langchain-pinecone
 langgraph
 pinecone-client
+pinecone
 python-dotenv
 unstructured
 pypdf
 reportlab
+
 sentence-transformers
