@@ -162,30 +162,24 @@ def safe_json_parse(text: str):
 
 
 def analyzer_node(state: AgentState):
-    final_analysis = {
-        "finance": [],
-        "legal": [],
-        "operations": [],
-        "compliance": []
-    }
-
-    # Process each chunk independently
-    for chunk in state.get("chunks", []):
-        chunk_text = chunk.page_content
-
+    analysis = {}
+    for domain in ["finance", "legal", "operations", "compliance"]:
+        # Safely get text from chunks
+        full_text = "\n".join(c.page_content for c in state.get("chunks", []))
+        
+        # Get model response
         response = chat_model.invoke(
-            MASTER_PROMPT.format(contract=chunk_text)
+            MASTER_PROMPT.format(contract=full_text)
         ).content
-
+        
+        # Parse JSON from markdown
         parsed = safe_json_parse(response)
-        if not parsed:
-            continue
+        
+        # Store domain-specific analysis
+        analysis[domain] = parsed.get(domain, [])
+    
+    return {"analysis": analysis}
 
-        # Merge chunk-level results into final result
-        for domain in ["finance", "legal", "operations", "compliance"]:
-            final_analysis[domain].extend(parsed.get(domain, []))
-
-    return {"analysis": final_analysis}
 
 
 
@@ -344,6 +338,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
