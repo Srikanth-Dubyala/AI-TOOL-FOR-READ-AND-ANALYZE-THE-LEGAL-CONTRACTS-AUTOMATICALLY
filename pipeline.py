@@ -158,55 +158,26 @@ def safe_json_parse(text: str):
             return None
 
 
-SUMMARY_PROMPT = PromptTemplate(
-    input_variables=["text"],
-    template="""
-Summarize this contract text into short bullet points.
-Focus only on obligations, risks, penalties, payments, legal terms.
-
-Return plain text, no JSON.
-
-{text}
-"""
-)
-
-
-def summarize_chunk(text):
-    return chat_model.invoke(
-        SUMMARY_PROMPT.format(text=text)
-    ).content
-
-# In[33]:
-
 
 def analyzer_node(state: AgentState):
-    summaries = []
-    for chunk in state["chunks"]:
-        s = summarize_chunk(chunk.page_content)
-        summaries.append(s)
+    analysis = {}
+    for domain in ["finance", "legal", "operations", "compliance"]:
+        # Safely get text from chunks
+        full_text = "\n".join(c.page_content for c in state.get("chunks", []))
+        
+        # Get model response
+        response = chat_model.invoke(
+            MASTER_PROMPT.format(contract=full_text)
+        ).content
+        
+        # Parse JSON from markdown
+        parsed = safe_json_parse(response)
+        
+        # Store domain-specific analysis
+        analysis[domain] = parsed.get(domain, [])
+    
+    return {"analysis": analysis}
 
-    combined_summary = "\n".join(summaries)
-
-    response = chat_model.invoke(
-        MASTER_PROMPT.format(contract=combined_summary)
-    ).content
-
-    parsed = safe_json_parse(response)
-
-    if not parsed:
-        raise ValueError("Model returned invalid JSON")
-
-    # Enforce structure safety
-    for key in ["finance", "legal", "operations", "compliance"]:
-        if key not in parsed or not isinstance(parsed[key], list):
-            parsed[key] = []
-
-        for item in parsed[key]:
-            item.setdefault("risk_level", "LOW")
-            item.setdefault("clause", "")
-            item.setdefault("reason", "")
-
-    return {"analysis": parsed}
 
 
 
@@ -364,6 +335,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
