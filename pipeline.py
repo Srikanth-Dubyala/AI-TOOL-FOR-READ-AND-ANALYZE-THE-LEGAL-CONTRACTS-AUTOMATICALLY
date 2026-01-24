@@ -227,13 +227,24 @@ def analyzer_node(state: AgentState):
 
 
 def build_graph():
+    # Make sure END is a string, not a list
+    END_NODE = "END"
+
     graph = StateGraph(AgentState)
+
+    # Add your analysis node
     graph.add_node("analyzer", analyzer_node)
+
+    # Set the entry point
     graph.set_entry_point("analyzer")
-    graph.add_edge("analyzer", END)
+
+    # Connect analyzer node to END node
+    graph.add_node(END_NODE)  # explicitly define END node
+    graph.add_edge("analyzer", END_NODE)
+
+    # Compile graph for execution
     return graph.compile()
 
-app = build_graph()
 
 
 # In[35]:
@@ -371,6 +382,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
