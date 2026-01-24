@@ -20,7 +20,7 @@ from langgraph.graph import StateGraph, END
 
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_pinecone import PineconeVectorStore
-from pinecone import PineconeClient
+from pinecone import Pinecone
 
 
 llm = HuggingFaceEndpoint(
@@ -201,7 +201,7 @@ app = build_graph()
 embedding_model = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
-pc= PineconeClient(api_key = os.environ["PINECONE_API_KEY"])
+pc= Pinecone(api_key = os.environ.get("PINECONE_API_KEY"))
 index_name = pc.Index("contract-analysis")
 vectorstore = PineconeVectorStore(
     index=index_name,
@@ -336,6 +336,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
