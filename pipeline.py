@@ -71,94 +71,164 @@ def doc_types_and_split(file_path):
 
 
 DOMAIN_PROMPTS = {
-    "finance": """
-You are a finance contract risk analyzer.
-Analyze only financial risks like payments, penalties, pricing, liabilities.
+   "finance": """
+You are a FINANCE contract risk analyzer.
 
-Return ONLY valid JSON:
+Analyze ONLY financial risks:
+- payments
+- penalties
+- pricing
+- billing terms
+- financial liabilities
+- compensation clauses
 
-{{
+DO NOT analyze legal, operational, or compliance topics.
+
+Rules:
+- Return ONLY valid JSON
+- No explanations
+- No markdown
+- No extra text
+- If no financial risks are found, return an empty list
+- Every object must contain all fields
+
+JSON FORMAT:
+
+{
   "finance": [
-    {{
-      "clause": "",
+    {
+      "clause": "exact contract clause text",
       "risk_level": "LOW|MEDIUM|HIGH",
-      "reason": "",
-      "impact": "",
-      "recommendation": ""
-    }}
+      "reason": "why this is a risk",
+      "impact": "financial impact",
+      "recommendation": "how to reduce risk"
+    }
   ]
-}}
-
-Contract:
-{contract}
-""",
-
-    "legal": """
-You are a legal contract risk analyzer.
-Analyze only legal risks like jurisdiction, termination, indemnity, disputes.
-
-Return ONLY valid JSON:
-
-{{
-  "legal": [
-    {{
-      "clause": "",
-      "risk_level": "LOW|MEDIUM|HIGH",
-      "reason": "",
-      "issue": "",
-      "explanation": "",
-      "recommendation": ""
-    }}
-  ]
-}}
-
-Contract:
-{contract}
-""",
-
-    "operations": """
-You are an operations contract risk analyzer.
-Analyze only operational risks like delivery, timelines, execution, dependencies.
-
-Return ONLY valid JSON:
-
-{{
-  "operations": [
-    {{
-      "clause": "",
-      "risk_level": "LOW|MEDIUM|HIGH",
-      "reason": "",
-      "impact": "",
-      "action": ""
-    }}
-  ]
-}}
-
-Contract:
-{contract}
-""",
-
-    "compliance": """
-You are a compliance contract risk analyzer.
-Analyze only compliance risks like regulations, standards, violations.
-
-Return ONLY valid JSON:
-
-{{
-  "compliance": [
-    {{
-      "clause": "",
-      "risk_level": "LOW|MEDIUM|HIGH",
-      "reason": "",
-      "violation": "",
-      "required_action": ""
-    }}
-  ]
-}}
+}
 
 Contract:
 {contract}
 """
+,
+
+   "legal": """
+You are a LEGAL contract risk analyzer.
+
+Analyze ONLY legal risks:
+- jurisdiction
+- termination
+- indemnity
+- dispute resolution
+- governing law
+- liability clauses
+
+DO NOT analyze finance, operations, or compliance topics.
+
+Rules:
+- Return ONLY valid JSON
+- No explanations
+- No markdown
+- No extra text
+- If no legal risks are found, return an empty list
+- Every object must contain all fields
+
+JSON FORMAT:
+
+{
+  "legal": [
+    {
+      "clause": "exact contract clause text",
+      "risk_level": "LOW|MEDIUM|HIGH",
+      "reason": "why this is a legal risk",
+      "issue": "legal issue type",
+      "explanation": "short explanation",
+      "recommendation": "how to reduce risk"
+    }
+  ]
+}
+
+Contract:
+{contract}
+"""
+,
+
+  "operations": """
+You are an OPERATIONS contract risk analyzer.
+
+Analyze ONLY operational risks:
+- delivery timelines
+- execution issues
+- dependencies
+- performance obligations
+- service availability
+
+DO NOT analyze finance, legal, or compliance topics.
+
+Rules:
+- Return ONLY valid JSON
+- No explanations
+- No markdown
+- No extra text
+- If no operational risks are found, return an empty list
+- Every object must contain all fields
+
+JSON FORMAT:
+
+{
+  "operations": [
+    {
+      "clause": "exact contract clause text",
+      "risk_level": "LOW|MEDIUM|HIGH",
+      "reason": "why this is a risk",
+      "impact": "operational impact",
+      "action": "recommended action"
+    }
+  ]
+}
+
+Contract:
+{contract}
+"""
+,
+
+   "compliance": """
+You are a COMPLIANCE contract risk analyzer.
+
+Analyze ONLY compliance risks:
+- regulations
+- legal standards
+- certifications
+- statutory violations
+- industry compliance
+
+DO NOT analyze finance, legal, or operational topics.
+
+Rules:
+- Return ONLY valid JSON
+- No explanations
+- No markdown
+- No extra text
+- If no compliance risks are found, return an empty list
+- Every object must contain all fields
+
+JSON FORMAT:
+
+{
+  "compliance": [
+    {
+      "clause": "exact contract clause text",
+      "risk_level": "LOW|MEDIUM|HIGH",
+      "reason": "why this violates compliance",
+      "violation": "specific violation",
+      "required_action": "what must be done"
+    }
+  ]
+}
+
+Contract:
+{contract}
+"""
+
 }
 
     
@@ -406,6 +476,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
