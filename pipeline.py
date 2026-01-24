@@ -211,23 +211,32 @@ def analyzer_node(state: AgentState, domain: str):
     return parsed.get(domain, [])
 
 def finance_node(state: AgentState):
-    state["analysis"]["finance"] = analyzer_node(state, "finance")
-    return state
+    finance_result = analyzer_node(state, "finance")
+    analysis = dict(state.get("analysis", {}))
+    analysis["finance"] = finance_result
+    return {"analysis": analysis}
 
 
 def legal_node(state: AgentState):
-    state["analysis"]["legal"] = analyzer_node(state, "legal")
-    return state
+    legal_result = analyzer_node(state, "legal")
+    analysis = dict(state.get("analysis", {}))
+    analysis["legal"] = legal_result
+    return {"analysis": analysis}
 
 
 def operations_node(state: AgentState):
-    state["analysis"]["operations"] = analyzer_node(state, "operations")
-    return state
+    operations_result = analyzer_node(state, "operations")
+    analysis = dict(state.get("analysis", {}))
+    analysis["operations"] = operations_result
+    return {"analysis": analysis}
 
 
 def compliance_node(state: AgentState):
-    state["analysis"]["compliance"] = analyzer_node(state, "compliance")
-    return state
+    compliance_result = analyzer_node(state, "compliance")
+    analysis = dict(state.get("analysis", {}))
+    analysis["compliance"] = compliance_result
+    return {"analysis": analysis}
+
 
 
 
@@ -384,6 +393,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
