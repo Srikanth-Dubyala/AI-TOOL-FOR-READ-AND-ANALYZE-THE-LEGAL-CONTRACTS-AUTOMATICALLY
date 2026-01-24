@@ -137,7 +137,7 @@ if "report" in st.session_state:
         col4.markdown(f"**Compliance Risk:** {risk_badge(report['overview']['compliance_risk'])}", unsafe_allow_html=True)
 
   # --------------------- Finance ---------------------
-with tabs[0]:
+with tab[0]:
     for c in report.get("finance", []):
         st.markdown(f"**Risk Level:** {c.get('risk_level', 'UNKNOWN')}")
         st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
@@ -146,7 +146,7 @@ with tabs[0]:
         st.markdown("---")
 
 # --------------------- Legal ---------------------
-with tabs[1]:
+with tab[1]:
     for c in report.get("legal", []):
         st.markdown(f"**Risk Level:** {c.get('risk_level', 'UNKNOWN')}")
         st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
@@ -156,7 +156,7 @@ with tabs[1]:
         st.markdown("---")
 
 # --------------------- Operations ---------------------
-with tabs[2]:
+with tab[2]:
     for c in report.get("operations", []):
         st.markdown(f"**Risk Level:** {c.get('risk_level', 'UNKNOWN')}")
         st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
@@ -166,7 +166,7 @@ with tabs[2]:
         st.markdown("---")
 
 # --------------------- Compliance ---------------------
-with tabs[3]:
+with tab[3]:
     for c in report.get("compliance", []):
         st.markdown(f"**Risk Level:** {c.get('risk_level', 'UNKNOWN')}")
         st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
@@ -193,6 +193,7 @@ with tabs[3]:
         feedback = st.text_area("What was unclear or missing?")
         if st.button("Submit Feedback"):
             st.success("Feedback recorded.")
+
 
 
 
