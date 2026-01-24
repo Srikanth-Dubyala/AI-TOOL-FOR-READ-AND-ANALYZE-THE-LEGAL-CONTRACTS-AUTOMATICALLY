@@ -66,62 +66,97 @@ def doc_types_and_split(file_path):
 # In[21]:
 
 
-MASTER_PROMPT = PromptTemplate(
-    input_variables=["contract"],
-    template="""
-You are a contract risk analyzer.
+DOMAIN_PROMPTS = {
+    "finance": """
+You are a finance contract risk analyzer.
+Analyze only financial risks like payments, penalties, pricing, liabilities.
 
-Return ONLY valid JSON.
+Return ONLY valid JSON:
 
-{{
+{
   "finance": [
-    {{
+    {
       "clause": "",
       "risk_level": "LOW|MEDIUM|HIGH",
       "reason": "",
       "impact": "",
       "recommendation": ""
-    }}
-  ],
+    }
+  ]
+}
+
+Contract:
+{contract}
+""",
+
+    "legal": """
+You are a legal contract risk analyzer.
+Analyze only legal risks like jurisdiction, termination, indemnity, disputes.
+
+Return ONLY valid JSON:
+
+{
   "legal": [
-    {{
+    {
       "clause": "",
       "risk_level": "LOW|MEDIUM|HIGH",
       "reason": "",
       "issue": "",
       "explanation": "",
       "recommendation": ""
-    }}
-  ],
+    }
+  ]
+}
+
+Contract:
+{contract}
+""",
+
+    "operations": """
+You are an operations contract risk analyzer.
+Analyze only operational risks like delivery, timelines, execution, dependencies.
+
+Return ONLY valid JSON:
+
+{
   "operations": [
-    {{
+    {
       "clause": "",
       "risk_level": "LOW|MEDIUM|HIGH",
       "reason": "",
       "impact": "",
       "action": ""
-    }}
-  ],
+    }
+  ]
+}
+
+Contract:
+{contract}
+""",
+
+    "compliance": """
+You are a compliance contract risk analyzer.
+Analyze only compliance risks like regulations, standards, violations.
+
+Return ONLY valid JSON:
+
+{
   "compliance": [
-    {{
+    {
       "clause": "",
       "risk_level": "LOW|MEDIUM|HIGH",
       "reason": "",
       "violation": "",
       "required_action": ""
-    }}
+    }
   ]
-}}
-
-Rules:
-- Do not add explanations
-- Do not add markdown
-- Output pure JSON only
+}
 
 Contract:
 {contract}
 """
-)
+}
+
     
 import json
 import re
@@ -163,21 +198,26 @@ def safe_json_parse(text: str):
 
 def analyzer_node(state: AgentState):
     analysis = {}
-    for domain in ["finance", "legal", "operations", "compliance"]:
-        # Safely get text from chunks
-        full_text = "\n".join(c.page_content for c in state.get("chunks", []))
-        
-        # Get model response
-        response = chat_model.invoke(
-            MASTER_PROMPT.format(contract=full_text)
-        ).content
-        
-        # Parse JSON from markdown
+
+    # Combine chunks once
+    full_text = "\n".join(c.page_content for c in state.get("chunks", []))
+
+    # Hard limit to avoid context explosion
+    MAX_CHARS = 4000
+    full_text = full_text[:MAX_CHARS]
+
+    for domain, prompt_template in DOMAIN_PROMPTS.items():
+        prompt = prompt_template.format(contract=full_text)
+
+        response = chat_model.invoke(prompt).content
         parsed = safe_json_parse(response)
-        
-        # Store domain-specific analysis
-        analysis[domain] = parsed.get(domain, [])
-    
+
+        if parsed is None:
+            print(f"{domain} agent returned invalid JSON")
+            analysis[domain] = []
+        else:
+            analysis[domain] = parsed.get(domain, [])
+
     return {"analysis": analysis}
 
 
@@ -336,6 +376,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
