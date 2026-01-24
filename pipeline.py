@@ -201,7 +201,8 @@ app = build_graph()
 embedding_model = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
-pc= Pinecone(api_key = os.environ.get("PINECONE_AI_KEY"))
+pc= Pinecone(api_key = os.environ.get("PINECONE_API_KEY"),
+              environment=os.environ.get("PINECONE_ENV"))
 index_name = pc.Index("contract-analysis")
 vectorstore = PineconeVectorStore(
     index=index_name,
@@ -336,6 +337,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
