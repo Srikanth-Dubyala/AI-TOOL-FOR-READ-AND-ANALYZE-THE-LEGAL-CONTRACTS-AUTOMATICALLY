@@ -12,6 +12,8 @@ unstructured
 pypdf
 reportlab
 sentence-transformers
+torch
+
 
 
 
