@@ -148,7 +148,7 @@ if "report" in st.session_state:
             st.markdown("---")
 
 # ---------- Legal ----------
-   with tabs[2]:
+    with tabs[2]:
        for c in report.get("legal", []):
            st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
            st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
@@ -168,8 +168,8 @@ if "report" in st.session_state:
            st.markdown("---")
 
 # ---------- Compliance ----------
-   with tabs[4]:
-       for c in report.get("compliance", []):
+    with tabs[4]:
+        for c in report.get("compliance", []):
            st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
            st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
            st.markdown(f"**Area:** {c.get('area', 'N/A')}")
@@ -196,6 +196,7 @@ if "report" in st.session_state:
         feedback = st.text_area("What was unclear or missing?")
         if st.button("Submit Feedback"):
             st.success("Feedback recorded.")
+
 
 
 
