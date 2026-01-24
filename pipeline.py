@@ -196,43 +196,28 @@ def safe_json_parse(text: str):
 # In[33]:
 
 
-def analyzer_node(state: AgentState):
-    analysis = {}
-
-    # Combine chunks once
-    full_text = "\n".join(c.page_content for c in state.get("chunks", []))
-
-    # Hard limit to avoid context explosion
-    MAX_CHARS = 4000
-    full_text = full_text[:MAX_CHARS]
-
-    for domain, prompt_template in DOMAIN_PROMPTS.items():
-        prompt = prompt_template.format(contract=full_text)
-
-        response = chat_model.invoke(prompt).content
+def domain_agent_node(domain: str, prompt_template: str, llm_invoke):
+    def node(state: AgentState):
+        full_text = "\n".join(c.page_content for c in state.get("chunks", []))[:4000]
+        prompt = prompt_template.replace("{contract}", full_text)
+        response = llm_invoke(prompt)
         parsed = safe_json_parse(response)
-
-        if parsed is None:
-            print(f"{domain} agent returned invalid JSON")
-            analysis[domain] = []
-        else:
-            analysis[domain] = parsed.get(domain, [])
-
-    return {"analysis": analysis}
+        return {domain: parsed.get(domain, []) if parsed else []}
+    return node
 
 
 
 # In[34]:
 
 
-def build_graph():
+def build_multi_agent_graph(llm_invoke):
     graph = StateGraph(AgentState)
-    graph.add_node("analyzer", analyzer_node)
-    graph.set_entry_point("analyzer")
-    graph.add_edge("analyzer", END)
+    for domain, prompt in DOMAIN_PROMPTS.items():
+        node_name = f"{domain}_agent"
+        graph.add_node(node_name, domain_agent_node(domain, prompt, llm_invoke))
+        graph.add_edge(node_name, END)
+    graph.set_entry_point([f"{domain}_agent" for domain in DOMAIN_PROMPTS.keys()])
     return graph.compile()
-
-app = build_graph()
 
 
 # In[35]:
@@ -273,22 +258,16 @@ def store_analysis_to_pinecone(analysis: dict, contract_id: str):
             })
             ids.append(f"{contract_id}_{domain}_{i}")
 
-    add("finance", analysis.get("finance", []))
-    add("legal", analysis.get("legal", []))
-    add("operations", analysis.get("operations", []))
-    add("compliance", analysis.get("compliance", []))
+    for domain in ["finance", "legal", "operations", "compliance"]:
+        add(domain, analysis.get(domain, []))
 
-    if not texts:
+    if texts:
+        vectorstore.add_texts(texts=texts, metadatas=metadatas, ids=ids)
+        print(f"Stored {len(texts)} vectors in Pinecone.")
+    else:
         print("Warning: No vectors generated. Model returned empty sections.")
-        return
 
-    vectorstore.add_texts(
-        texts=texts,
-        metadatas=metadatas,
-        ids=ids
-    )
 
-    print(f"Stored {len(texts)} vectors in Pinecone.")
 
 
 
@@ -349,24 +328,28 @@ def format_report_for_ui(analysis: dict):
         "compliance": fill_items("compliance", analysis.get("compliance", []))
     }
 
-def run_contract_analysis(file_path: str):
-    # Generate unique contract ID
+
+def run_contract_analysis(file_path: str, llm_invoke=chat_model.invoke, store_vectors=True):
     contract_id = generate_contract_id()
-    
-    # Split document into chunks
     chunks = doc_types_and_split(file_path)
-    
-    # Run backend analysis graph
-    result = app.invoke({"chunks": chunks})
-    analysis = result["analysis"]
-    
-    # Store raw analysis in Pinecone
-    store_analysis_to_pinecone(analysis, contract_id)
-    
+
+    # Build and run multi-agent graph
+    app = build_multi_agent_graph(llm_invoke)
+    result_list = app.invoke({"chunks": chunks})
+
+    # Merge agent outputs
+    analysis = {}
+    for agent_result in result_list:
+        analysis.update(agent_result)
+
+    # Store in Pinecone if enabled
+    if store_vectors:
+        store_analysis_to_pinecone(analysis, contract_id)
+
     # Format for UI
     report = format_report_for_ui(analysis)
     report["contract_id"] = contract_id
-    
+
     return report
 
 
@@ -376,6 +359,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
