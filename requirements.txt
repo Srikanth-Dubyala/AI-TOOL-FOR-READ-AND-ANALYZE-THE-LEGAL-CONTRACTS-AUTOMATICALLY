@@ -10,7 +10,8 @@ python-dotenv
 unstructured
 pypdf
 reportlab
-
 sentence-transformers
+
+
 
 
