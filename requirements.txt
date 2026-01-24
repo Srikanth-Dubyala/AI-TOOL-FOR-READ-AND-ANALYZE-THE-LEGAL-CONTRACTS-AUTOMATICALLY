@@ -4,13 +4,15 @@ langchain-community
 langchain-huggingface
 langchain-pinecone
 langgraph
-pinecone
-pinecone-client
+pinecone-client==2.2.4
+langchain-pinecone==0.0.3
+langchain-core
 python-dotenv
 unstructured
 pypdf
 reportlab
 sentence-transformers
+
 
 
 
