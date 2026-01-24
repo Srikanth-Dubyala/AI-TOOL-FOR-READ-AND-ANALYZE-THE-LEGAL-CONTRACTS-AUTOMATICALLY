@@ -210,24 +210,24 @@ def analyzer_node(state: AgentState, domain: str):
         return []
     return parsed.get(domain, [])
 
-
 def finance_node(state: AgentState):
-    return {"analysis": {"finance": analyzer_node(state, "finance")}}
+    state["analysis"]["finance"] = analyzer_node(state, "finance")
+    return state
+
 
 def legal_node(state: AgentState):
-    return {"analysis": {"legal": analyzer_node(state, "legal")}}
+    state["analysis"]["legal"] = analyzer_node(state, "legal")
+    return state
+
 
 def operations_node(state: AgentState):
-    return {"analysis": {"operations": analyzer_node(state, "operations")}}
+    state["analysis"]["operations"] = analyzer_node(state, "operations")
+    return state
+
 
 def compliance_node(state: AgentState):
-    return {"analysis": {"compliance": analyzer_node(state, "compliance")}}
-
-def aggregator_node(state: AgentState):
-    combined_analysis = {}
-    for domain in ["finance", "legal", "operations", "compliance"]:
-        combined_analysis[domain] = state.get("analysis", {}).get(domain, [])
-    return {"analysis": combined_analysis}
+    state["analysis"]["compliance"] = analyzer_node(state, "compliance")
+    return state
 
 
 
@@ -240,18 +240,15 @@ def build_multi_agent_graph():
     graph.add_node("legal", legal_node)
     graph.add_node("operations", operations_node)
     graph.add_node("compliance", compliance_node)
-    graph.add_node("aggregator", aggregator_node)
 
     graph.set_entry_point("finance")
 
     graph.add_edge("finance", "legal")
     graph.add_edge("legal", "operations")
     graph.add_edge("operations", "compliance")
-    graph.add_edge("compliance", "aggregator")
-    graph.add_edge("aggregator", END)  # use langgraph's END sentinel
+    graph.add_edge("compliance", END)
 
     return graph.compile()
-
 
 
 
@@ -387,6 +384,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
