@@ -36,9 +36,13 @@ chat_model = ChatHuggingFace(llm=llm)
 # In[4]:
 
 
+from typing_extensions import Annotated
+import operator
+
 class AgentState(TypedDict):
     chunks: List
-    analysis: dict
+    analysis: Annotated[dict, operator.or_]
+
 
 
 # In[5]:
@@ -402,6 +406,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
