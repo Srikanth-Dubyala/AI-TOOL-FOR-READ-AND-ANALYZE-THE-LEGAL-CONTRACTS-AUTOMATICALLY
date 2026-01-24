@@ -244,7 +244,6 @@ def aggregator_node(state: AgentState):
 
 
 def build_multi_agent_graph():
-    END_NODE = "END"
     graph = StateGraph(AgentState)
 
     # Add separate agents
@@ -262,7 +261,7 @@ def build_multi_agent_graph():
     graph.add_edge("legal", "operations")
     graph.add_edge("operations", "compliance")
     graph.add_edge("compliance", "aggregator")
-    graph.add_edge("aggregator", END_NODE)
+    graph.add_edge("aggregator", END)  # <- use the imported END
 
     return graph.compile()
 
@@ -401,6 +400,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
