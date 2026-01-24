@@ -157,9 +157,9 @@ if "report" in st.session_state:
            st.markdown(f"**Recommendation:** {c.get('recommendation', 'N/A')}")
            st.markdown("---")
 
-# ---------- Operations ----------
-   with tabs[3]:
-       for c in report.get("operations", []):
+ # ---------- Operations ----------
+    with tabs[3]:
+        for c in report.get("operations", []):
            st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
            st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
            st.markdown(f"**Type:** {c.get('type', 'N/A')}")
@@ -196,6 +196,7 @@ if "report" in st.session_state:
         feedback = st.text_area("What was unclear or missing?")
         if st.button("Submit Feedback"):
             st.success("Feedback recorded.")
+
 
 
 
