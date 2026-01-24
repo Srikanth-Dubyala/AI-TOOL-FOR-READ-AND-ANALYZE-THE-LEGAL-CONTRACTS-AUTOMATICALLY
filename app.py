@@ -127,7 +127,7 @@ if "report" in st.session_state:
     tabs = st.tabs(["Overview", "Finance", "Legal", "Operations", "Compliance", "Final Report"])
 
     # ---------- Overview ----------
-    with tabs[0]:
+with tabs[0]:
         st.markdown(f"**Overall Risk Level:** {risk_badge(report['overview']['overall_risk'])}", unsafe_allow_html=True)
         st.write(report["overview"]["summary"])
 
@@ -196,5 +196,6 @@ with tabs[4]:
         feedback = st.text_area("What was unclear or missing?")
         if st.button("Submit Feedback"):
             st.success("Feedback recorded.")
+
 
 
