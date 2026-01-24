@@ -254,7 +254,6 @@ def build_multi_agent_graph():
     graph.add_node("operations", operations_node)
     graph.add_node("compliance", compliance_node)
     graph.add_node("aggregator", aggregator_node)
-    graph.add_node(END_NODE)
 
     # Entry point
     graph.set_entry_point("finance")
@@ -264,9 +263,10 @@ def build_multi_agent_graph():
     graph.add_edge("legal", "operations")
     graph.add_edge("operations", "compliance")
     graph.add_edge("compliance", "aggregator")
-    graph.add_edge("aggregator", END_NODE)
+    graph.add_edge("aggregator", END_NODE)  # no need to add END as a node
 
     return graph.compile()
+
 
 
 
@@ -400,6 +400,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
