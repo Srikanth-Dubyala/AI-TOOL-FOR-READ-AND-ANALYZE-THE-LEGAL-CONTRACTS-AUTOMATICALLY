@@ -196,44 +196,32 @@ def safe_json_parse(text: str):
 # In[33]:
 
 
-def analyzer_node(state: AgentState):
-    analysis = {}
+def analyzer_node(state: AgentState, domain: str):
+    """
+    Analyze a single domain using the LLM.
+    """
+    full_text = "\n".join(c.page_content for c in state.get("chunks", []))[:4000]
 
-    # Combine chunks once
-    full_text = "\n".join(c.page_content for c in state.get("chunks", []))
-
-    # Hard limit to avoid context explosion
-    MAX_CHARS = 4000
-    full_text = full_text[:MAX_CHARS]
-
-    for domain, prompt_template in DOMAIN_PROMPTS.items():
-        # Replace .format(contract=...) with a simple replace to avoid KeyError
-        prompt = prompt_template.replace("{contract}", full_text)
-
-        response = chat_model.invoke(prompt).content
-        parsed = safe_json_parse(response)
-
-        if parsed is None:
-            print(f"{domain} agent returned invalid JSON")
-            analysis[domain] = []
-        else:
-            analysis[domain] = parsed.get(domain, [])
-
-    return {"analysis": analysis}
-
+    prompt = DOMAIN_PROMPTS[domain].replace("{contract}", full_text)
+    response = chat_model.invoke(prompt).content
+    parsed = safe_json_parse(response)
+    if parsed is None:
+        print(f"{domain} agent returned invalid JSON")
+        return []
+    return parsed.get(domain, [])
 
 
 def finance_node(state: AgentState):
-    return {"analysis": {"finance": analyzer_node({**state, "chunks": state["chunks"]})["analysis"]["finance"]}}
+    return {"analysis": {"finance": analyzer_node(state, "finance")}}
 
 def legal_node(state: AgentState):
-    return {"analysis": {"legal": analyzer_node({**state, "chunks": state["chunks"]})["analysis"]["legal"]}}
+    return {"analysis": {"legal": analyzer_node(state, "legal")}}
 
 def operations_node(state: AgentState):
-    return {"analysis": {"operations": analyzer_node({**state, "chunks": state["chunks"]})["analysis"]["operations"]}}
+    return {"analysis": {"operations": analyzer_node(state, "operations")}}
 
 def compliance_node(state: AgentState):
-    return {"analysis": {"compliance": analyzer_node({**state, "chunks": state["chunks"]})["analysis"]["compliance"]}}
+    return {"analysis": {"compliance": analyzer_node(state, "compliance")}}
 
 def aggregator_node(state: AgentState):
     combined_analysis = {}
@@ -243,25 +231,24 @@ def aggregator_node(state: AgentState):
 
 
 
+
+
 def build_multi_agent_graph():
     graph = StateGraph(AgentState)
 
-    # Add separate agents
     graph.add_node("finance", finance_node)
     graph.add_node("legal", legal_node)
     graph.add_node("operations", operations_node)
     graph.add_node("compliance", compliance_node)
     graph.add_node("aggregator", aggregator_node)
 
-    # Entry point
     graph.set_entry_point("finance")
 
-    # Connect agents sequentially
     graph.add_edge("finance", "legal")
     graph.add_edge("legal", "operations")
     graph.add_edge("operations", "compliance")
     graph.add_edge("compliance", "aggregator")
-    graph.add_edge("aggregator", END)  # <- use the imported END
+    graph.add_edge("aggregator", END)  # use langgraph's END sentinel
 
     return graph.compile()
 
@@ -400,6 +387,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
