@@ -1,9 +1,10 @@
 streamlit
 
 langchain==0.1.20
-langchain-community==0.0.38
 langchain-core==0.1.52
+langchain-community==0.0.38
 langchain-huggingface==0.0.3
+
 langgraph==0.0.40
 
 pinecone-client==3.0.2
@@ -15,6 +16,7 @@ python-dotenv
 unstructured
 pypdf
 reportlab
+
 
 
 
