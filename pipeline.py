@@ -223,27 +223,51 @@ def analyzer_node(state: AgentState):
 
 
 
-# In[34]:
+def finance_node(state: AgentState):
+    return {"analysis": {"finance": analyzer_node({**state, "chunks": state["chunks"]})["analysis"]["finance"]}}
+
+def legal_node(state: AgentState):
+    return {"analysis": {"legal": analyzer_node({**state, "chunks": state["chunks"]})["analysis"]["legal"]}}
+
+def operations_node(state: AgentState):
+    return {"analysis": {"operations": analyzer_node({**state, "chunks": state["chunks"]})["analysis"]["operations"]}}
+
+def compliance_node(state: AgentState):
+    return {"analysis": {"compliance": analyzer_node({**state, "chunks": state["chunks"]})["analysis"]["compliance"]}}
+
+def aggregator_node(state: AgentState):
+    combined_analysis = {}
+    for domain in ["finance", "legal", "operations", "compliance"]:
+        combined_analysis[domain] = state.get("analysis", {}).get(domain, [])
+    return {"analysis": combined_analysis}
 
 
-def build_graph():
-    # Make sure END is a string, not a list
+
+def build_multi_agent_graph():
     END_NODE = "END"
 
     graph = StateGraph(AgentState)
 
-    # Add your analysis node
-    graph.add_node("analyzer", analyzer_node)
+    # Add separate agents
+    graph.add_node("finance", finance_node)
+    graph.add_node("legal", legal_node)
+    graph.add_node("operations", operations_node)
+    graph.add_node("compliance", compliance_node)
+    graph.add_node("aggregator", aggregator_node)
+    graph.add_node(END_NODE)
 
-    # Set the entry point
-    graph.set_entry_point("analyzer")
+    # Entry point
+    graph.set_entry_point("finance")
 
-    # Connect analyzer node to END node
-    graph.add_node(END_NODE)  # explicitly define END node
-    graph.add_edge("analyzer", END_NODE)
+    # Connect agents sequentially
+    graph.add_edge("finance", "legal")
+    graph.add_edge("legal", "operations")
+    graph.add_edge("operations", "compliance")
+    graph.add_edge("compliance", "aggregator")
+    graph.add_edge("aggregator", END_NODE)
 
-    # Compile graph for execution
     return graph.compile()
+
 
 
 
@@ -355,25 +379,19 @@ def format_report_for_ui(analysis: dict):
         "compliance": fill_items("compliance", analysis.get("compliance", []))
     }
 
-def run_contract_analysis(file_path: str):
-    # Generate unique contract ID
-    contract_id = generate_contract_id()
-    
-    # Split document into chunks
+def run_contract_analysis_multi_agent(file_path: str):
+    import uuid
+
+    contract_id = str(uuid.uuid4())
     chunks = doc_types_and_split(file_path)
-    
-    # Run backend analysis graph
-    result = app.invoke({"chunks": chunks})
-    analysis = result["analysis"]
-    
-    # Store raw analysis in Pinecone
+    app = build_multi_agent_graph()
+    result = app.invoke({"chunks": chunks, "analysis": {}})
+    analysis = result.get("analysis", {})
     store_analysis_to_pinecone(analysis, contract_id)
-    
-    # Format for UI
     report = format_report_for_ui(analysis)
     report["contract_id"] = contract_id
-    
     return report
+
 
 
 # In[38]:
@@ -382,6 +400,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
