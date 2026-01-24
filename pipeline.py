@@ -379,7 +379,7 @@ def format_report_for_ui(analysis: dict):
         "compliance": fill_items("compliance", analysis.get("compliance", []))
     }
 
-def run_contract_analysis_multi_agent(file_path: str):
+def run_contract_analysis(file_path: str):
     import uuid
 
     contract_id = str(uuid.uuid4())
@@ -400,6 +400,7 @@ def run_contract_analysis_multi_agent(file_path: str):
 
 
 # In[ ]:
+
 
 
 
