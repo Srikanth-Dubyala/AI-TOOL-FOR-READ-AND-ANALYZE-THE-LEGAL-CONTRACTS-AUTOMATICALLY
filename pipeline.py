@@ -334,7 +334,7 @@ def run_contract_analysis(file_path: str, llm_invoke=chat_model.invoke, store_ve
     chunks = doc_types_and_split(file_path)
 
     # Build and run multi-agent graph
-    app = build_multi_agent_graph(llm_invoke)
+    app = build_multi_agent_graph(chat_model.invoke)
     result_list = app.invoke({"chunks": chunks})
 
     # Merge agent outputs
@@ -359,6 +359,7 @@ def run_contract_analysis(file_path: str, llm_invoke=chat_model.invoke, store_ve
 
 
 # In[ ]:
+
 
 
 
