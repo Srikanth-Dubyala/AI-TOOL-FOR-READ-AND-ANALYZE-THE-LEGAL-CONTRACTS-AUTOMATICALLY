@@ -211,53 +211,62 @@ def analyzer_node(state: AgentState, domain: str):
     return parsed.get(domain, [])
 
 def finance_node(state: AgentState):
-    finance_result = analyzer_node(state, "finance")
-    analysis = dict(state.get("analysis", {}))
-    analysis["finance"] = finance_result
-    return {"analysis": analysis}
-
+    return {"analysis": {"finance": analyzer_node(state, "finance")}}
 
 def legal_node(state: AgentState):
-    legal_result = analyzer_node(state, "legal")
-    analysis = dict(state.get("analysis", {}))
-    analysis["legal"] = legal_result
-    return {"analysis": analysis}
-
+    return {"analysis": {"legal": analyzer_node(state, "legal")}}
 
 def operations_node(state: AgentState):
-    operations_result = analyzer_node(state, "operations")
-    analysis = dict(state.get("analysis", {}))
-    analysis["operations"] = operations_result
-    return {"analysis": analysis}
-
+    return {"analysis": {"operations": analyzer_node(state, "operations")}}
 
 def compliance_node(state: AgentState):
-    compliance_result = analyzer_node(state, "compliance")
-    analysis = dict(state.get("analysis", {}))
-    analysis["compliance"] = compliance_result
-    return {"analysis": analysis}
+    return {"analysis": {"compliance": analyzer_node(state, "compliance")}}
 
 
-
-
-
+def join_node(state: AgentState):
+    merged = {}
+    for k, v in state.get("analysis", {}).items():
+        merged[k] = v
+    return {"analysis": merged}
 
 def build_multi_agent_graph():
     graph = StateGraph(AgentState)
 
+    # Start node
+    graph.add_node("start", lambda state: state)
+
+    # Parallel agent nodes
     graph.add_node("finance", finance_node)
     graph.add_node("legal", legal_node)
     graph.add_node("operations", operations_node)
     graph.add_node("compliance", compliance_node)
 
-    graph.set_entry_point("finance")
+    # Join node
+    graph.add_node("join", join_node)
 
-    graph.add_edge("finance", "legal")
-    graph.add_edge("legal", "operations")
-    graph.add_edge("operations", "compliance")
-    graph.add_edge("compliance", END)
+    # Entry
+    graph.set_entry_point("start")
+
+    # FAN-OUT (parallel)
+    graph.add_edge("start", "finance")
+    graph.add_edge("start", "legal")
+    graph.add_edge("start", "operations")
+    graph.add_edge("start", "compliance")
+
+    # FAN-IN (join)
+    graph.add_edge("finance", "join")
+    graph.add_edge("legal", "join")
+    graph.add_edge("operations", "join")
+    graph.add_edge("compliance", "join")
+
+    # End
+    graph.add_edge("join", END)
 
     return graph.compile()
+
+
+
+
 
 
 
@@ -393,6 +402,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
