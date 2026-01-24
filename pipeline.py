@@ -73,17 +73,17 @@ Analyze only financial risks like payments, penalties, pricing, liabilities.
 
 Return ONLY valid JSON:
 
-{
+{{
   "finance": [
-    {
+    {{
       "clause": "",
       "risk_level": "LOW|MEDIUM|HIGH",
       "reason": "",
       "impact": "",
       "recommendation": ""
-    }
+    }}
   ]
-}
+}}
 
 Contract:
 {contract}
@@ -95,18 +95,18 @@ Analyze only legal risks like jurisdiction, termination, indemnity, disputes.
 
 Return ONLY valid JSON:
 
-{
+{{
   "legal": [
-    {
+    {{
       "clause": "",
       "risk_level": "LOW|MEDIUM|HIGH",
       "reason": "",
       "issue": "",
       "explanation": "",
       "recommendation": ""
-    }
+    }}
   ]
-}
+}}
 
 Contract:
 {contract}
@@ -118,17 +118,17 @@ Analyze only operational risks like delivery, timelines, execution, dependencies
 
 Return ONLY valid JSON:
 
-{
+{{
   "operations": [
-    {
+    {{
       "clause": "",
       "risk_level": "LOW|MEDIUM|HIGH",
       "reason": "",
       "impact": "",
       "action": ""
-    }
+    }}
   ]
-}
+}}
 
 Contract:
 {contract}
@@ -140,17 +140,17 @@ Analyze only compliance risks like regulations, standards, violations.
 
 Return ONLY valid JSON:
 
-{
+{{
   "compliance": [
-    {
+    {{
       "clause": "",
       "risk_level": "LOW|MEDIUM|HIGH",
       "reason": "",
       "violation": "",
       "required_action": ""
-    }
+    }}
   ]
-}
+}}
 
 Contract:
 {contract}
@@ -376,6 +376,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
