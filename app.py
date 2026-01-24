@@ -148,8 +148,10 @@ if "report" in st.session_state:
     # ---------- Legal ----------
     with tabs[2]:
         for l in report["legal"]:
-            st.markdown(f"**Risk Level:** {risk_badge(l['risk_level'])}", unsafe_allow_html=True)
             risk = l.get("risk_level", "UNKNOWN")
+        
+            st.markdown(f"**Risk Level:** {risk_badge(l['risk_level'])}", unsafe_allow_html=True)
+            
             
             st.markdown(f"**Issue:** {l.get('issue', 'N/A')}")
             st.markdown(f"**Explanation:** {l.get('explanation', 'N/A')}")
@@ -159,8 +161,9 @@ if "report" in st.session_state:
     # ---------- Operations ----------
     with tabs[3]:
         for o in report["operations"]:
-            st.markdown(f"**Risk Level:** {risk_badge(o['risk_level'])}", unsafe_allow_html=True)
             risk = o.get("risk_level", "UNKNOWN")
+            st.markdown(f"**Risk Level:** {risk_badge(o['risk_level'])}", unsafe_allow_html=True)
+           
             st.markdown(f"**Type:** {o.get('type', 'N/A')}")
             st.markdown(f"**Impact:** {o.get('impact', 'N/A')}")
             st.markdown(f"**Action Needed:** {o.get('action', 'N/A')}")
@@ -169,8 +172,8 @@ if "report" in st.session_state:
     # ---------- Compliance ----------
     with tabs[4]:
         for c in report["compliance"]:
-            st.markdown(f"**Risk Level:** {risk_badge(c['risk_level'])}", unsafe_allow_html=True)
             risk = c.get("risk_level", "UNKNOWN")
+            st.markdown(f"**Risk Level:** {risk_badge(c['risk_level'])}", unsafe_allow_html=True)
             st.markdown(f"**Area:** {c.get('area', 'N/A')}")
             st.markdown(f"**Violation:** {c.get('violation', 'N/A')}")
             st.markdown(f"**Required Action:** {c.get('required_action', 'N/A')}")
@@ -194,5 +197,6 @@ if "report" in st.session_state:
         feedback = st.text_area("What was unclear or missing?")
         if st.button("Submit Feedback"):
             st.success("Feedback recorded.")
+
 
 
