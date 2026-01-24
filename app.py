@@ -127,7 +127,7 @@ if "report" in st.session_state:
     tabs = st.tabs(["Overview", "Finance", "Legal", "Operations", "Compliance", "Final Report"])
 
     # ---------- Overview ----------
-with tabs[0]:
+    with tabs[0]:
         st.markdown(f"**Overall Risk Level:** {risk_badge(report['overview']['overall_risk'])}", unsafe_allow_html=True)
         st.write(report["overview"]["summary"])
 
@@ -139,43 +139,43 @@ with tabs[0]:
 
     # ---------- Finance ----------
  # ---------- Finance ----------
-with tabs[1]:
-    for c in report.get("finance", []):
-        st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
-        st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
-        st.markdown(f"**Impact:** {c.get('impact', 'N/A')}")
-        st.markdown(f"**Recommendation:** {c.get('recommendation', 'N/A')}")
-        st.markdown("---")
+    with tabs[1]:
+        for c in report.get("finance", []):
+            st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
+            st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
+            st.markdown(f"**Impact:** {c.get('impact', 'N/A')}")
+            st.markdown(f"**Recommendation:** {c.get('recommendation', 'N/A')}")
+            st.markdown("---")
 
 # ---------- Legal ----------
-with tabs[2]:
-    for c in report.get("legal", []):
-        st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
-        st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
-        st.markdown(f"**Issue:** {c.get('issue', 'N/A')}")
-        st.markdown(f"**Explanation:** {c.get('explanation', 'N/A')}")
-        st.markdown(f"**Recommendation:** {c.get('recommendation', 'N/A')}")
-        st.markdown("---")
+   with tabs[2]:
+       for c in report.get("legal", []):
+           st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
+           st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
+           st.markdown(f"**Issue:** {c.get('issue', 'N/A')}")
+           st.markdown(f"**Explanation:** {c.get('explanation', 'N/A')}")
+           st.markdown(f"**Recommendation:** {c.get('recommendation', 'N/A')}")
+           st.markdown("---")
 
 # ---------- Operations ----------
-with tabs[3]:
-    for c in report.get("operations", []):
-        st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
-        st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
-        st.markdown(f"**Type:** {c.get('type', 'N/A')}")
-        st.markdown(f"**Impact:** {c.get('impact', 'N/A')}")
-        st.markdown(f"**Action:** {c.get('action', 'N/A')}")
-        st.markdown("---")
+   with tabs[3]:
+       for c in report.get("operations", []):
+           st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
+           st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
+           st.markdown(f"**Type:** {c.get('type', 'N/A')}")
+           st.markdown(f"**Impact:** {c.get('impact', 'N/A')}")
+           st.markdown(f"**Action:** {c.get('action', 'N/A')}")
+           st.markdown("---")
 
 # ---------- Compliance ----------
-with tabs[4]:
-    for c in report.get("compliance", []):
-        st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
-        st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
-        st.markdown(f"**Area:** {c.get('area', 'N/A')}")
-        st.markdown(f"**Violation:** {c.get('violation', 'N/A')}")
-        st.markdown(f"**Required Action:** {c.get('required_action', 'N/A')}")
-        st.markdown("---")
+   with tabs[4]:
+       for c in report.get("compliance", []):
+           st.markdown(f"**Risk Level:** {risk_badge(c.get('risk_level', 'UNKNOWN'))}", unsafe_allow_html=True)
+           st.markdown(f"**Clause:** {c.get('clause', 'N/A')}")
+           st.markdown(f"**Area:** {c.get('area', 'N/A')}")
+           st.markdown(f"**Violation:** {c.get('violation', 'N/A')}")
+           st.markdown(f"**Required Action:** {c.get('required_action', 'N/A')}")
+           st.markdown("---")
 
 
     # ---------- Final Report + PDF ----------
@@ -196,6 +196,7 @@ with tabs[4]:
         feedback = st.text_area("What was unclear or missing?")
         if st.button("Submit Feedback"):
             st.success("Feedback recorded.")
+
 
 
 
