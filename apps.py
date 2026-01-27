@@ -18,7 +18,7 @@ from pipelines import run_contract_analysis  # your updated backend
 
 # -------------------- Background --------------------
 def set_bg():
-    image_path = Path("ai_photo.jpg")
+    image_path = Path("aiphoto.jpg")
     if not image_path.exists():
         st.error("Background image not found. Make sure ai_bg.png is in the same folder as app.py")
         return
@@ -196,6 +196,7 @@ if "report" in st.session_state:
         feedback = st.text_area("What was unclear or missing?")
         if st.button("Submit Feedback"):
             st.success("Feedback recorded.")
+
 
 
 
