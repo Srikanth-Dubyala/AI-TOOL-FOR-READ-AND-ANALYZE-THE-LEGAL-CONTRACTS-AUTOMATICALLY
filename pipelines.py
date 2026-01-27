@@ -22,8 +22,6 @@ from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
 llm = HuggingFaceEndpoint(
     repo_id="mistralai/Mistral-7B-Instruct-v0.2",
@@ -480,6 +478,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
