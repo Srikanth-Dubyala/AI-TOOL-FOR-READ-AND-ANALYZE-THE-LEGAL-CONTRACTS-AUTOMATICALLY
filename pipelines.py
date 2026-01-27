@@ -23,7 +23,7 @@ from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 
 
-llm = HuggingFaceEndpoint(
+chat_model = HuggingFaceEndpoint(
     repo_id="mistralai/Mistral-7B-Instruct-v0.3",
     task="text-generation",
     max_new_tokens=3072,
@@ -33,7 +33,6 @@ llm = HuggingFaceEndpoint(
     
 )
 
-chat_model = ChatHuggingFace(llm=llm)
 
 
 # In[4]:
@@ -479,6 +478,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
