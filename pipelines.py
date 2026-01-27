@@ -24,10 +24,11 @@ from pinecone import Pinecone
 
 
 llm = HuggingFaceEndpoint(
-    repo_id="mistralai/Mistral-7B-Instruct-v0.2",
+    repo_id="mistralai/Mistral-7B-Instruct-v0.3",
     task="text-generation",
     max_new_tokens=3072,
-    temperature=0.1
+    temperature=0.1,
+    huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
     
     
 )
@@ -478,6 +479,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
