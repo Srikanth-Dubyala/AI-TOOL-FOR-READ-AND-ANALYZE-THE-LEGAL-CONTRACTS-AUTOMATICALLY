@@ -27,8 +27,7 @@ llm = HuggingFaceEndpoint(
     repo_id="microsoft/Phi-3-mini-4k-instruct",
     task="text-generation",
     max_new_tokens=3072,
-    temperature=0.1,
-    huggingfacehub_api_token=HUGGINGFACE_API_KEY
+    temperature=0.1
     
 )
 
@@ -478,6 +477,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
