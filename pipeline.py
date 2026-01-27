@@ -27,8 +27,8 @@ HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
 llm = HuggingFaceEndpoint(
     repo_id="HuggingFaceH4/zephyr-7b-beta",
-    task="text-generation",
-    max_new_tokens=3072,
+    task="chat-completion",
+    max_new_tokens=2048,
     temperature=0.1,
     huggingfacehub_api_token=HUGGINGFACE_API_KEY
     
@@ -481,6 +481,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
