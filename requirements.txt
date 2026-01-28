@@ -1,4 +1,4 @@
--c constraints.txt
+
 streamlit>=1.35.0
 langchain>=0.2.0
 langchain-core>=0.3.0
@@ -15,5 +15,6 @@ python-dotenv
 unstructured
 pypdf
 reportlab
+
 
 
