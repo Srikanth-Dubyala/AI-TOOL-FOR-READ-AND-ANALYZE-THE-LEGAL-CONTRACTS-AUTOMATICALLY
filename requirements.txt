@@ -13,4 +13,6 @@ python-dotenv
 unstructured
 pypdf
 reportlab
+pinecone-plugin-inference==0
+
 
