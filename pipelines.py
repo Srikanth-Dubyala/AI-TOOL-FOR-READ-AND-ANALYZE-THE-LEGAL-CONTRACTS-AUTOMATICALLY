@@ -1,3 +1,13 @@
+import subprocess
+import sys
+
+# Kill deprecated pinecone plugins if Streamlit preinstalled them
+subprocess.run([
+    sys.executable, "-m", "pip", "uninstall", "-y",
+    "pinecone-plugin-inference",
+    "pinecone-plugin-assistant",
+    "pinecone-plugin-interface"
+], check=False)
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -478,6 +488,7 @@ def run_contract_analysis(file_path: str):
 
 
 # In[ ]:
+
 
 
 
