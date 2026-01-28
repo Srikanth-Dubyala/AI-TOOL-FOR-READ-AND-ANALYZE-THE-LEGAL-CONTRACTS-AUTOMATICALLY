@@ -1,0 +1,3 @@
+pinecone-plugin-inference==9999
+pinecone-plugin-assistant==9999
+pinecone-plugin-interface==9999
