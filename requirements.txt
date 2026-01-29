@@ -7,7 +7,7 @@ langchain-community>=0.3.0
 langchain-huggingface>=0.1.0
 huggingface_hub>=0.24.0
 langgraph>=0.1.0
-pinecone>=5.4.0
+pinecone =5.4.2
 langchain-pinecone>=0.2.0
 sentence-transformers>=3.0.0
 torch>=2.0.0
@@ -15,6 +15,7 @@ python-dotenv
 unstructured
 pypdf
 reportlab
+
 
 
 
