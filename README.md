@@ -9,7 +9,7 @@ Legal risk assessment
 Operational vulnerability analysis
 Compliance violations
 
-####### Document Ingestion
+#####  Document Ingestion
 Supports PDF, DOCX, TXT
 ###### Text chunking via RecursiveCharacterTextSplitter
 Cleans & normalizes malformed JSON from LLM outputs
