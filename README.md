@@ -2,7 +2,7 @@
 #### This project is an end-to-end AI platform that reads, analyzes, and evaluates contract documents using multiple domain-specialized agents powered by oLlama-3. The system automatically detects finance, legal, operational, and compliance risks and generates a structured, professional report.
 
 
-######## Multi-Agent Risk Analysis
+#####  Multi-Agent Risk Analysis
 
 Finance risk detection
 Legal risk assessment
